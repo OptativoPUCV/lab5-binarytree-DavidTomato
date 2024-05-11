@@ -163,8 +163,21 @@ Pair *searchTreeMap(TreeMap *tree, void *key) {
   // No se encontró ningún nodo con la clave especificada
   return NULL;
 }
+
 Pair *upperBound(TreeMap *tree, void *key) { return NULL; }
 
-Pair *firstTreeMap(TreeMap *tree) { return NULL; }
+Pair *firstTreeMap(TreeMap *tree) {
+    if (tree == NULL || tree->root == NULL) {
+        return NULL;
+    }
+
+    TreeNode *current = tree->root;
+    while (current->left != NULL) {
+        current = current->left;
+    }
+
+    tree->current = current;
+    return current->pair;
+}
 
 Pair *nextTreeMap(TreeMap *tree) { return NULL; }
