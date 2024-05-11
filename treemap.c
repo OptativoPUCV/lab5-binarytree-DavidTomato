@@ -50,13 +50,13 @@ void insertTreeMap(TreeMap *tree, void *key, void *value) {
   if (tree == NULL || key == NULL)
     return;
 
-  // Verificamos si la clave ya existe en el TreeMap
+  // Verificar si la clave ya existe en el TreeMap
   if (searchTreeMap(tree, key) != NULL) {
-    printf("La clave ya existe en el TreeMap.\n");
+    printf("La clave ya existe en el TreeMap. No se insertó el dato.\n");
     return;
   }
 
-  // Creamos un nuevo nodo
+  // Crear un nuevo nodo
   TreeNode *new_node = createTreeNode(key, value);
   if (new_node == NULL)
     return;
@@ -67,26 +67,24 @@ void insertTreeMap(TreeMap *tree, void *key, void *value) {
     return;
   }
 
-  // Comenzamos la búsqueda desde la raíz
+  // Empezar la búsqueda desde la raíz
   TreeNode *current = tree->root;
   TreeNode *parent = NULL;
 
-  // Recorremos el árbol hasta encontrar el lugar adecuado para el nuevo nodo
+  // Recorrer el árbol hasta encontrar el lugar adecuado para el nuevo nodo
   while (current != NULL) {
     parent = current;
-    // Si la clave es menor que la clave del nodo actual, nos movemos a la
-    // izquierda
+    // Si la clave es menor que la clave del nodo actual, ir a la izquierda
     if (tree->lower_than(key, current->pair->key)) {
       current = current->left;
     }
-    // Si la clave es mayor que la clave del nodo actual, nos movemos a la
-    // derecha
+    // Si la clave es mayor que la clave del nodo actual, ir a la derecha
     else {
       current = current->right;
     }
   }
 
-  // Asignamos el padre del nuevo nodo
+  // Asignar el padre del nuevo nodo
   new_node->parent = parent;
 
   // Si la clave es menor que la clave del padre, el nuevo nodo es el hijo
