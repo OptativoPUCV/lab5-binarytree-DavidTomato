@@ -103,7 +103,26 @@ void eraseTreeMap(TreeMap *tree, void *key) {
   removeNode(tree, node);
 }
 
-Pair *searchTreeMap(TreeMap *tree, void *key) { return NULL; }
+Pair *searchTreeMap(TreeMap *tree, void *key) {
+  if (tree == NULL || key == NULL)
+    return NULL;
+
+  TreeNode *current = tree->root;
+  while (current != NULL) {
+    int compare_result = tree->lower_than(key, current->pair->key);
+    if (compare_result) {
+      current = current->left;
+    } else if (tree->lower_than(current->pair->key, key)) {
+      current = current->right;
+    } else {
+      // Se encontró el nodo con la clave especificada
+      return current->pair;
+    }
+  }
+
+  // No se encontró ningún nodo con la clave especificada
+  return NULL;
+}
 
 Pair *upperBound(TreeMap *tree, void *key) { return NULL; }
 
