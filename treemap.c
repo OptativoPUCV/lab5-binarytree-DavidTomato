@@ -47,8 +47,14 @@ TreeMap *createTreeMap(int (*lower_than)(void *key1, void *key2)) {
 }
 
 void insertTreeMap(TreeMap *tree, void *key, void *value) {
-  if (tree == NULL)
+  if (tree == NULL || key == NULL)
     return;
+
+  // Verificamos si la clave ya existe en el TreeMap
+  if (searchTreeMap(tree, key) != NULL) {
+    printf("La clave ya existe en el TreeMap.\n");
+    return;
+  }
 
   // Creamos un nuevo nodo
   TreeNode *new_node = createTreeNode(key, value);
@@ -73,8 +79,8 @@ void insertTreeMap(TreeMap *tree, void *key, void *value) {
     if (tree->lower_than(key, current->pair->key)) {
       current = current->left;
     }
-    // Si la clave es mayor o igual que la clave del nodo actual, nos movemos a
-    // la derecha
+    // Si la clave es mayor que la clave del nodo actual, nos movemos a la
+    // derecha
     else {
       current = current->right;
     }
@@ -88,8 +94,8 @@ void insertTreeMap(TreeMap *tree, void *key, void *value) {
   if (tree->lower_than(key, parent->pair->key)) {
     parent->left = new_node;
   }
-  // Si la clave es mayor o igual que la clave del padre, el nuevo nodo es el
-  // hijo derecho
+  // Si la clave es mayor que la clave del padre, el nuevo nodo es el hijo
+  // derecho
   else {
     parent->right = new_node;
   }
