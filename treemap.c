@@ -127,11 +127,9 @@ void removeNode(TreeMap *tree, TreeNode *node) {
     TreeNode *successor = minimum(node->right);
     node->pair = successor->pair;
     removeNode(tree, successor);
+    return; // Se sale de la función después de eliminar el sucesor
   }
-  free(node->pair->key);
-  free(node->pair->value);
-  free(node->pair);
-  free(node);
+  free(node); // Liberación de memoria solo para el nodo
 }
 
 void eraseTreeMap(TreeMap *tree, void *key) {
