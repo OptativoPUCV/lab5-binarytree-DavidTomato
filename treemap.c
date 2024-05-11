@@ -167,17 +167,44 @@ Pair *searchTreeMap(TreeMap *tree, void *key) {
 Pair *upperBound(TreeMap *tree, void *key) { return NULL; }
 
 Pair *firstTreeMap(TreeMap *tree) {
-    if (tree == NULL || tree->root == NULL) {
-        return NULL;
-    }
+  if (tree == NULL || tree->root == NULL) {
+    return NULL;
+  }
 
-    TreeNode *current = tree->root;
-    while (current->left != NULL) {
-        current = current->left;
-    }
+  TreeNode *current = tree->root;
+  while (current->left != NULL) {
+    current = current->left;
+  }
 
-    tree->current = current;
-    return current->pair;
+  tree->current = current;
+  return current->pair;
 }
 
-Pair *nextTreeMap(TreeMap *tree) { return NULL; }
+Pair *nextTreeMap(TreeMap *tree) {
+  if (tree == NULL || tree->root == NULL || tree->current == NULL) {
+    return NULL;
+  }
+
+  TreeNode *current = tree->current;
+
+  // Si el nodo tiene un hijo derecho, el siguiente nodo es el nodo más a la
+  // izquierda del subárbol derecho.
+  if (current->right != NULL) {
+    current = current->right;
+    while (current->left != NULL) {
+      current = current->left;
+    }
+    tree->current = current;
+    return current->pair;
+  }
+
+  // Si el nodo no tiene un hijo derecho, el siguiente nodo es el primer
+  // ancestro cuyo hijo izquierdo es también un ancestro del nodo.
+  TreeNode *parent = current->parent;
+  while (parent != NULL && current == parent->right) {
+    current = parent;
+    parent = parent->parent;
+  }
+  tree->current = parent;
+  return (parent != NULL) ? parent->pair : NULL;
+}
