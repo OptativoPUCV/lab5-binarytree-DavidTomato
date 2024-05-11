@@ -116,6 +116,7 @@ Pair *searchTreeMap(TreeMap *tree, void *key) {
       current = current->right;
     } else {
       // Se encontró el nodo con la clave especificada
+      tree->current = current; // Actualizamos tree->current
       return current->pair;
     }
   }
@@ -123,7 +124,6 @@ Pair *searchTreeMap(TreeMap *tree, void *key) {
   // No se encontró ningún nodo con la clave especificada
   return NULL;
 }
-
 Pair *upperBound(TreeMap *tree, void *key) { return NULL; }
 
 Pair *firstTreeMap(TreeMap *tree) { return NULL; }
