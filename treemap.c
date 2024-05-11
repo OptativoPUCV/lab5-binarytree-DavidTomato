@@ -51,51 +51,41 @@ void insertTreeMap(TreeMap *tree, void *key, void *value) {
     return;
 
   // Verificar si la clave ya existe en el TreeMap
-  if (searchTreeMap(tree, key) != NULL) {
-    printf("La clave ya existe en el TreeMap. No se insertó el dato.\n");
+  Pair *existing_pair = searchTreeMap(tree, key);
+  if (existing_pair != NULL) {
+    // La clave ya existe, no se inserta nada
     return;
   }
 
-  // Crear un nuevo nodo
+  // La clave no existe, creamos un nuevo nodo y lo insertamos en el TreeMap
   TreeNode *new_node = createTreeNode(key, value);
   if (new_node == NULL)
     return;
 
-  // Si el árbol está vacío, el nuevo nodo se convierte en la raíz
+  // Caso especial: árbol vacío
   if (tree->root == NULL) {
     tree->root = new_node;
     return;
   }
 
-  // Empezar la búsqueda desde la raíz
   TreeNode *current = tree->root;
-  TreeNode *parent = NULL;
-
-  // Recorrer el árbol hasta encontrar el lugar adecuado para el nuevo nodo
   while (current != NULL) {
-    parent = current;
-    // Si la clave es menor que la clave del nodo actual, ir a la izquierda
-    if (tree->lower_than(key, current->pair->key)) {
+    int compare_result = tree->lower_than(key, current->pair->key);
+    if (compare_result) {
+      if (current->left == NULL) {
+        current->left = new_node;
+        new_node->parent = current;
+        return;
+      }
       current = current->left;
-    }
-    // Si la clave es mayor que la clave del nodo actual, ir a la derecha
-    else {
+    } else {
+      if (current->right == NULL) {
+        current->right = new_node;
+        new_node->parent = current;
+        return;
+      }
       current = current->right;
     }
-  }
-
-  // Asignar el padre del nuevo nodo
-  new_node->parent = parent;
-
-  // Si la clave es menor que la clave del padre, el nuevo nodo es el hijo
-  // izquierdo
-  if (tree->lower_than(key, parent->pair->key)) {
-    parent->left = new_node;
-  }
-  // Si la clave es mayor que la clave del padre, el nuevo nodo es el hijo
-  // derecho
-  else {
-    parent->right = new_node;
   }
 }
 
