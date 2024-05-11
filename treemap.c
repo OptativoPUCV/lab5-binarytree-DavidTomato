@@ -47,46 +47,42 @@ TreeMap *createTreeMap(int (*lower_than)(void *key1, void *key2)) {
 }
 
 void insertTreeMap(TreeMap *tree, void *key, void *value) {
-  if (tree == NULL || key == NULL)
+  if (tree == NULL || key == NULL || value == NULL)
     return;
 
-  // Verificar si la clave ya existe en el TreeMap
-  Pair *existing_pair = searchTreeMap(tree, key);
-  if (existing_pair != NULL) {
-    // La clave ya existe, no se inserta nada
-    return;
-  }
-
-  // La clave no existe, creamos un nuevo nodo y lo insertamos en el TreeMap
   TreeNode *new_node = createTreeNode(key, value);
   if (new_node == NULL)
     return;
 
-  // Caso especial: árbol vacío
   if (tree->root == NULL) {
     tree->root = new_node;
-    return;
-  }
+  } else {
+    TreeNode *current = tree->root;
+    TreeNode *parent = NULL;
 
-  TreeNode *current = tree->root;
-  while (current != NULL) {
-    int compare_result = tree->lower_than(key, current->pair->key);
-    if (compare_result) {
-      if (current->left == NULL) {
-        current->left = new_node;
-        new_node->parent = current;
+    while (current != NULL) {
+      parent = current;
+      if (tree->lower_than(key, current->pair->key)) {
+        current = current->left;
+      } else if (tree->lower_than(current->pair->key, key)) {
+        current = current->right;
+      } else {
+        // Clave duplicada, liberar memoria y salir
+        free(new_node->pair);
+        free(new_node);
         return;
       }
-      current = current->left;
+    }
+
+    new_node->parent = parent;
+    if (tree->lower_than(key, parent->pair->key)) {
+      parent->left = new_node;
     } else {
-      if (current->right == NULL) {
-        current->right = new_node;
-        new_node->parent = current;
-        return;
-      }
-      current = current->right;
+      parent->right = new_node;
     }
   }
+
+  tree->current = new_node; // Actualizamos tree->current
 }
 
 TreeNode *minimum(TreeNode *x) { return NULL; }
